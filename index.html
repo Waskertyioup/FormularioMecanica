@@ -8,33 +8,33 @@
 </head>
 <body>
     <div class="container">
-        <h1>Formulario de Contacto</h1>
+        <header>
+            <h1>Mi Sitio Web</h1>
+            <nav><!-- tu menú de navegación --></nav>
+        </header>
         
-        <form id="contactForm" class="contact-form">
-            <div class="form-group">
-                <label for="nombre">Nombre completo *</label>
-                <input type="text" id="nombre" name="nombre" required>
+        <main>
+            <div class="form-section">
+                <h2>Formulario de Contacto</h2>
+                <p>Complete el siguiente formulario y nos pondremos en contacto</p>
+                
+                <!-- REEMPLAZA SOLO LA PARTE DEL FORMULARIO -->
+                <div class="google-form-container">
+                    <iframe src="https://docs.google.com/forms/d/e/TU_FORM_ID_REAL/viewform?embedded=true" 
+                            width="100%" 
+                            height="600" 
+                            frameborder="0" 
+                            marginheight="0" 
+                            marginwidth="0">
+                        Cargando…
+                    </iframe>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="email">Email *</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="mensaje">Mensaje</label>
-                <textarea id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..."></textarea>
-            </div>
-            
-            <button type="submit" id="submitBtn" class="submit-btn">
-                <span class="btn-text">Enviar Mensaje</span>
-                <span class="btn-loading" style="display: none;">Enviando...</span>
-            </button>
-            
-            <div id="message" class="message"></div>
-        </form>
+        </main>
+        
+        <footer>
+            <!-- tu footer -->
+        </footer>
     </div>
-
-    <script src="script.js"></script>
 </body>
 </html>
