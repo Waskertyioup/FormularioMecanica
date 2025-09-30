@@ -1,4 +1,4 @@
-// Configuración - REEMPLAZA ESTA URL CON LA DE TU GOOGLE APPS SCRIPT
+// Configuración - REEMPLAZA CON TU URL REAL
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1aZmK2-9X1GaI6RUytSVwtun4q6Pfc9-AMBiim2LIu_1mqH4FibVLhGA8gU9il3x6CQ/exec';
 
 class FormHandler {
@@ -16,13 +16,12 @@ class FormHandler {
     
     async handleSubmit(e) {
         e.preventDefault();
+        console.log('Form submission started');
         
-        // Validar formulario
         if (!this.validateForm()) {
             return;
         }
         
-        // Preparar datos
         const formData = new FormData(this.form);
         const data = {
             nombre: formData.get('nombre'),
@@ -30,7 +29,7 @@ class FormHandler {
             mensaje: formData.get('mensaje')
         };
         
-        // Enviar datos
+        console.log('Submitting data:', data);
         await this.submitForm(data);
     }
     
@@ -61,6 +60,8 @@ class FormHandler {
         this.setLoading(true);
         
         try {
+            console.log('Sending to:', SCRIPT_URL);
+            
             const response = await fetch(SCRIPT_URL, {
                 method: 'POST',
                 headers: {
@@ -70,6 +71,7 @@ class FormHandler {
             });
             
             const result = await response.json();
+            console.log('Response:', result);
             
             if (result.status === 'success') {
                 this.showMessage('¡Mensaje enviado correctamente!', 'success');
@@ -79,7 +81,7 @@ class FormHandler {
             }
             
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Fetch error:', error);
             this.showMessage('Error al enviar el formulario. Intenta nuevamente.', 'error');
         } finally {
             this.setLoading(false);
@@ -106,7 +108,6 @@ class FormHandler {
         this.messageDiv.className = `message ${type}`;
         this.messageDiv.style.display = 'block';
         
-        // Auto-ocultar mensajes de éxito después de 5 segundos
         if (type === 'success') {
             setTimeout(() => {
                 this.messageDiv.style.display = 'none';
@@ -119,17 +120,3 @@ class FormHandler {
 document.addEventListener('DOMContentLoaded', () => {
     new FormHandler();
 });
-
-// Función para testear la conexión (opcional)
-async function testConnection() {
-    try {
-        const response = await fetch(SCRIPT_URL);
-        const result = await response.json();
-        console.log('Test connection:', result);
-    } catch (error) {
-        console.error('Connection test failed:', error);
-    }
-}
-
-// Ejecutar test al cargar (opcional)
-// document.addEventListener('DOMContentLoaded', testConnection);
