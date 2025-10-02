@@ -4,136 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario Protegido</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e35302 0%, #b84202 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .login-container {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(227, 83, 2, 0.2);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-        
-        .form-container {
-            display: none;
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(227, 83, 2, 0.2);
-            max-width: 800px;
-            width: 100%;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-weight: 300;
-        }
-        
-        .password-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 16px;
-            margin: 20px 0;
-            transition: all 0.3s ease;
-        }
-        
-        .password-input:focus {
-            outline: none;
-            border-color: #e35302;
-            box-shadow: 0 0 0 3px rgba(227, 83, 2, 0.1);
-        }
-        
-        .login-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #e35302 0%, #b84202 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        
-        .login-btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(135deg, #f36302 0%, #c85202 100%);
-        }
-        
-        .google-form-container {
-            width: 100%;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-        
-        .google-form-container iframe {
-            width: 100%;
-            height: 600px;
-            border: none;
-            display: block;
-        }
-        
-        .logout-btn {
-            background: #e35302;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: background 0.3s ease;
-        }
-        
-        .logout-btn:hover {
-            background: #f36302;
-        }
-        
-        .error-message {
-            color: #e35302;
-            margin-top: 10px;
-            display: none;
-            font-weight: 500;
-        }
-        
-        /* Responsive para móviles */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .login-container,
-            .form-container {
-                padding: 30px 20px;
-            }
-            
-            .google-form-container iframe {
-                height: 500px;
-            }
-        }
-    </style>
+   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Pantalla de Login -->
@@ -147,8 +18,7 @@
     
     <!-- Formulario Google (oculto inicialmente) -->
     <div id="formScreen" class="form-container">
-        <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
-        <h1>Formulario de Contacto</h1>
+        <h1>Carga de Mediciones</h1>
         <div class="google-form-container">
             <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSclzDFfzqQhs8xAAqByvY5eFcjnRQNkOlJDp3Yh4ud7EVzKcg/viewform?embedded=true" 
                         frameborder="0" 
@@ -215,6 +85,7 @@
     </script>
 </body>
 </html>
+
 
 
 
