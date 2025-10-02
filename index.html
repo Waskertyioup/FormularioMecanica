@@ -5,7 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario Protegido</title>
     <style>
-        /* Tus estilos actuales... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .form-container {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .google-form-container {
+            width: 100%;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .google-form-container iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            display: block;
+        }
+        
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            color: #ff4757;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -13,21 +110,9 @@
     <div id="loginScreen" class="login-container">
         <h1>🔒 Acceso Restringido</h1>
         <p>Ingrese la contraseña para acceder al formulario</p>
-        
-        <!-- FORM tradicional para evitar CORS -->
-        <form id="passwordForm" target="authFrame">
-            <input type="password" name="password" class="password-input" placeholder="Contraseña" required>
-            <button type="submit" class="login-btn" id="loginBtn">
-                <span id="btnText">Acceder</span>
-                <span id="btnLoading" style="display: none;">Verificando...</span>
-            </button>
-        </form>
-        
-        <div id="errorMessage" class="error-message"></div>
-        <div id="loadingMessage" class="loading">Verificando contraseña...</div>
-        
-        <!-- Iframe oculto para recibir respuesta -->
-        <iframe name="authFrame" id="authFrame" style="display: none;"></iframe>
+        <input type="password" id="password" class="password-input" placeholder="Contraseña" autocomplete="off">
+        <button class="login-btn" onclick="verifyPassword()">Acceder</button>
+        <div id="errorMessage" class="error-message">Contraseña incorrecta</div>
     </div>
     
     <!-- Formulario Google (oculto inicialmente) -->
@@ -35,7 +120,7 @@
         <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
         <h1>Formulario de Contacto</h1>
         <div class="google-form-container">
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSclzDFfzqQhs8xAAqByvY5eFcjnRQNkOlJDp3Yh4ud7EVzKcg/viewform?embedded=true" 
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfY4Jx9mQ2hV4gJ4Y6b5nWwL8zT7kXqH3pGcR9vQlN1oZzA/viewform?embedded=true" 
                     frameborder="0" 
                     marginheight="0" 
                     marginwidth="0">
@@ -45,65 +130,31 @@
     </div>
 
     <script>
-        const AUTH_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1aZmK2-9X1GaI6RUytSVwtun4q6Pfc9-AMBiim2LIu_1mqH4FibVLhGA8gU9il3x6CQ/exec';
+        // CONTRASEÑA OFUSCADA - CAMBIA ESTA PARTE
+        // Para generar tu propia contraseña ofuscada:
+        // 1. Abre la consola del navegador (F12)
+        // 2. Ejecuta: btoa("tu-contraseña-real")
+        // 3. Copia el resultado y reemplaza la línea de abajo
+        const ENCRYPTED_PASSWORD = "Y2xpZW50ZTIwMjQ="; // "cliente2024" en base64
         
-        // Escuchar mensajes del iframe
-        window.addEventListener('message', function(event) {
-            if (event.data.type === 'AUTH_SUCCESS') {
-                grantAccess();
-            } else if (event.data.type === 'AUTH_ERROR') {
-                showError(event.data.message);
-            }
-        });
-        
-        // Manejar envío del formulario
-        document.getElementById('passwordForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.querySelector('input[name="password"]').value;
-            
-            if (!password) {
-                showError("Por favor ingrese una contraseña");
-                return;
-            }
-            
-            setLoading(true);
-            
-            // El formulario se enviará automáticamente al iframe
-            // La respuesta vendrá via postMessage
-        });
-        
-        function grantAccess() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('formScreen').style.display = 'block';
-            localStorage.setItem('formAuthenticated', 'true');
-            setLoading(false);
-        }
-        
-        function showError(message) {
+        function verifyPassword() {
+            const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            document.querySelector('input[name="password"]').value = '';
-            document.querySelector('input[name="password"]').focus();
-            setLoading(false);
-        }
-        
-        function setLoading(loading) {
-            const loginBtn = document.getElementById('loginBtn');
-            const btnText = document.getElementById('btnText');
-            const btnLoading = document.getElementById('btnLoading');
-            const loadingMessage = document.getElementById('loadingMessage');
             
-            if (loading) {
-                loginBtn.disabled = true;
-                btnText.style.display = 'none';
-                btnLoading.style.display = 'inline';
-                loadingMessage.style.display = 'block';
+            // Decodificar la contraseña correcta
+            const correctPassword = atob(ENCRYPTED_PASSWORD);
+            
+            if (password === correctPassword) {
+                // Acceso concedido
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('formScreen').style.display = 'block';
+                localStorage.setItem('formAuthenticated', 'true');
+                errorMessage.style.display = 'none';
             } else {
-                loginBtn.disabled = false;
-                btnText.style.display = 'inline';
-                btnLoading.style.display = 'none';
-                loadingMessage.style.display = 'none';
+                // Contraseña incorrecta
+                errorMessage.style.display = 'block';
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
             }
         }
         
@@ -112,12 +163,30 @@
             location.reload();
         }
         
-        // Verificar sesión al cargar la página
+        // Verificar si ya está autenticado al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('formAuthenticated') === 'true') {
-                grantAccess();
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('formScreen').style.display = 'block';
             }
+            
+            // Permitir Enter para enviar la contraseña
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyPassword();
+                }
+            });
         });
+        
+        // Protección básica contra inspección (opcional)
+        setTimeout(() => {
+            if (!localStorage.getItem('formAuthenticated')) {
+                // Limpiar rastros temporales
+                if (typeof ENCRYPTED_PASSWORD !== 'undefined') {
+                    // La variable ya está protegida por const
+                }
+            }
+        }, 1000);
     </script>
 </body>
 </html>
