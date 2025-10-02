@@ -3,90 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario Protegido</title>
-   <link rel="stylesheet" href="styles.css">
+    <title>Formulario Ingreso de datos Mecánicos (Equipos)</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Pantalla de Login -->
-    <div id="loginScreen" class="login-container">
-        <h1>🔒 Acceso Restringido</h1>
-        <p>Ingrese la contraseña para acceder al formulario</p>
-        <input type="password" id="password" class="password-input" placeholder="Contraseña" autocomplete="off">
-        <button class="login-btn" onclick="verifyPassword()">Acceder</button>
-        <div id="errorMessage" class="error-message">Contraseña incorrecta</div>
-    </div>
-    
-    <!-- Formulario Google (oculto inicialmente) -->
-    <div id="formScreen" class="form-container">
-        <h1>Carga de Mediciones</h1>
-        <div class="google-form-container">
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSclzDFfzqQhs8xAAqByvY5eFcjnRQNkOlJDp3Yh4ud7EVzKcg/viewform?embedded=true" 
+    <div class="container">
+        <h1>Formulario Ingreso de datos Mecánicos (Equipos)</h1>
+        
+        <div class="form-section">
+            <p>Complete el siguiente formulario con los datos solicitados</p>
+            
+            <!-- CONTENEDOR DEL FORMULARIO GOOGLE -->
+            <div class="google-form-container">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSclzDFfzqQhs8xAAqByvY5eFcjnRQNkOlJDp3Yh4ud7EVzKcg/viewform?embedded=true" 
                         frameborder="0" 
                         marginheight="0" 
                         marginwidth="0">
                     Cargando…
                 </iframe>
+            </div>
         </div>
     </div>
-
-    <script>
-        const ENCRYPTED_PASSWORD = 'QkhQMjAyNQ==';
-        
-        function verifyPassword() {
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
-            
-            // Decodificar la contraseña correcta
-            const correctPassword = atob(ENCRYPTED_PASSWORD);
-            
-            if (password === correctPassword) {
-                // Acceso concedido
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('formScreen').style.display = 'block';
-                localStorage.setItem('formAuthenticated', 'true');
-                errorMessage.style.display = 'none';
-            } else {
-                // Contraseña incorrecta
-                errorMessage.style.display = 'block';
-                document.getElementById('password').value = '';
-                document.getElementById('password').focus();
-            }
-        }
-        
-        function logout() {
-            localStorage.removeItem('formAuthenticated');
-            location.reload();
-        }
-        
-        // Verificar si ya está autenticado al cargar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('formAuthenticated') === 'true') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('formScreen').style.display = 'block';
-            }
-            
-            // Permitir Enter para enviar la contraseña
-            document.getElementById('password').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    verifyPassword();
-                }
-            });
-        });
-        
-        // Protección básica contra inspección (opcional)
-        setTimeout(() => {
-            if (!localStorage.getItem('formAuthenticated')) {
-                // Limpiar rastros temporales
-                if (typeof ENCRYPTED_PASSWORD !== 'undefined') {
-                    // La variable ya está protegida por const
-                }
-            }
-        }, 1000);
-    </script>
 </body>
-</html>
-
-
-
-
-
+</html>  
