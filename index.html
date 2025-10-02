@@ -3,28 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario Ingreso de datos Mecánicos (Equipos)</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Formulario Protegido</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .form-container {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .google-form-container {
+            width: 100%;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .google-form-container iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            display: block;
+        }
+        
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            color: #ff4757;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            color: #667eea;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Formulario Ingreso de datos Mecánicos (Equipos)</h1>
-        
-        <div class="form-section">
-            <p>Complete el siguiente formulario con los datos solicitados</p>
-            
-            <!-- CONTENEDOR DEL FORMULARIO GOOGLE -->
-            <div class="google-form-container">
-                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSclzDFfzqQhs8xAAqByvY5eFcjnRQNkOlJDp3Yh4ud7EVzKcg/viewform?embedded=true" 
-                        frameborder="0" 
-                        marginheight="0" 
-                        marginwidth="0">
-                    Cargando…
-                </iframe>
-            </div>
+    <!-- Pantalla de Login -->
+    <div id="loginScreen" class="login-container">
+        <h1>🔒 Acceso Restringido</h1>
+        <p>Ingrese la contraseña para acceder al formulario</p>
+        <input type="password" id="password" class="password-input" placeholder="Contraseña" autocomplete="off">
+        <button class="login-btn" onclick="verifyPassword()" id="loginBtn">
+            <span id="btnText">Acceder</span>
+            <span id="btnLoading" style="display: none;">Verificando...</span>
+        </button>
+        <div id="errorMessage" class="error-message"></div>
+        <div id="loadingMessage" class="loading">Verificando contraseña...</div>
+    </div>
+    
+    <!-- Formulario Google (oculto inicialmente) -->
+    <div id="formScreen" class="form-container">
+        <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        <h1>Formulario de Contacto</h1>
+        <div class="google-form-container">
+            <iframe src="https://docs.google.com/forms/d/e/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/viewform?embedded=true" 
+                    frameborder="0" 
+                    marginheight="0" 
+                    marginwidth="0">
+                Cargando…
+            </iframe>
         </div>
     </div>
+
+    <script>
+        const AUTH_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1aZmK2-9X1GaI6RUytSVwtun4q6Pfc9-AMBiim2LIu_1mqH4FibVLhGA8gU9il3x6CQ/exec';
+        
+        async function verifyPassword() {
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoading = document.getElementById('btnLoading');
+            
+            if (!password) {
+                showError("Por favor ingrese una contraseña");
+                return;
+            }
+            
+            // Mostrar loading
+            setLoading(true);
+            
+            try {
+                const response = await fetch(AUTH_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: "verifyPassword",
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    // Acceso concedido
+                    grantAccess();
+                } else {
+                    showError(result.message);
+                }
+                
+            } catch (error) {
+                console.error("Error:", error);
+                showError("Error de conexión. Intente nuevamente.");
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        function grantAccess() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('formScreen').style.display = 'block';
+            localStorage.setItem('formAuthenticated', 'true');
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            document.getElementById('password').value = '';
+            document.getElementById('password').focus();
+        }
+        
+        function setLoading(loading) {
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoading = document.getElementById('btnLoading');
+            const loadingMessage = document.getElementById('loadingMessage');
+            
+            if (loading) {
+                loginBtn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'inline';
+                loadingMessage.style.display = 'block';
+            } else {
+                loginBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                loadingMessage.style.display = 'none';
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('formAuthenticated');
+            location.reload();
+        }
+        
+        // Verificar sesión al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('formAuthenticated') === 'true') {
+                grantAccess();
+            }
+            
+            // Permitir Enter para enviar la contraseña
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyPassword();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-
-
