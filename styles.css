@@ -1,76 +1,135 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario Protegido</title>
-    <style>
-        /* Pega aquí el CSS de arriba */
-    </style>
-</head>
-<body>
-    <!-- Pantalla de Login -->
-    <div id="loginScreen" class="login-container">
-        <h1>🔒 Acceso Restringido</h1>
-        <p>Ingrese la contraseña para acceder al formulario</p>
-        <input type="password" id="password" class="password-input" placeholder="Contraseña" autocomplete="off">
-        <button class="login-btn" onclick="verifyPassword()">Acceder</button>
-        <div id="errorMessage" class="error-message">Contraseña incorrecta</div>
-    </div>
-    
-    <!-- Formulario Google (oculto inicialmente) -->
-    <div id="formScreen" class="form-container">
-        <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
-        <h1>Formulario de Contacto</h1>
-        <div class="google-form-container">
-            <iframe src="https://docs.google.com/forms/d/e/TU_FORM_ID/viewform?embedded=true" 
-                    frameborder="0" 
-                    marginheight="0" 
-                    marginwidth="0">
-                Cargando…
-            </iframe>
-        </div>
-    </div>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <script>
-        // CONTRASEÑA OFUSCADA - RECUERDA CAMBIARLA
-        const ENCRYPTED_PASSWORD = "Y2xpZW50ZTIwMjQ="; // "cliente2024" en base64
-        
-        function verifyPassword() {
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
-            
-            const correctPassword = atob(ENCRYPTED_PASSWORD);
-            
-            if (password === correctPassword) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('formScreen').style.display = 'block';
-                localStorage.setItem('formAuthenticated', 'true');
-                errorMessage.style.display = 'none';
-            } else {
-                errorMessage.style.display = 'block';
-                document.getElementById('password').value = '';
-                document.getElementById('password').focus();
-            }
-        }
-        
-        function logout() {
-            localStorage.removeItem('formAuthenticated');
-            location.reload();
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('formAuthenticated') === 'true') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('formScreen').style.display = 'block';
-            }
-            
-            document.getElementById('password').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    verifyPassword();
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px; /* Un poco más ancho para el formulario */
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+.form-section {
+    text-align: center;
+}
+
+.form-section h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.form-section p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* CONTENEDOR DEL FORMULARIO GOOGLE - ESTILOS CORREGIDOS */
+.google-form-container {
+    width: 100%;
+    margin: 20px 0;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    overflow: hidden; /* ¡MANTIENE TODO DENTRO! */
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.google-form-container iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+    display: block;
+}
+
+/* ESTILOS PARA EL BOTÓN DE ENVÍO (por si los necesitas después) */
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* MENSAJES (por si los necesitas después) */
+.message {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.message.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.message.info {
+    background: #cce7ff;
+    color: #004085;
+    border: 1px solid #b3d7ff;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 20px;
+        max-width: 100%;
+    }
+    
+    .google-form-container iframe {
+        height: 500px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .google-form-container iframe {
+        height: 450px;
+    }
+}
