@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #e35302 0%, #b84202 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,7 +25,7 @@
             background: white;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(227, 83, 2, 0.2);
             text-align: center;
             max-width: 400px;
             width: 100%;
@@ -36,7 +36,7 @@
             background: white;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(227, 83, 2, 0.2);
             max-width: 800px;
             width: 100%;
         }
@@ -54,12 +54,19 @@
             border-radius: 8px;
             font-size: 16px;
             margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: #e35302;
+            box-shadow: 0 0 0 3px rgba(227, 83, 2, 0.1);
         }
         
         .login-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #e35302 0%, #b84202 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -71,6 +78,7 @@
         
         .login-btn:hover {
             transform: translateY(-2px);
+            background: linear-gradient(135deg, #f36302 0%, #c85202 100%);
         }
         
         .google-form-container {
@@ -89,19 +97,41 @@
         }
         
         .logout-btn {
-            background: #ff4757;
+            background: #e35302;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             margin-bottom: 20px;
+            transition: background 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: #f36302;
         }
         
         .error-message {
-            color: #ff4757;
+            color: #e35302;
             margin-top: 10px;
             display: none;
+            font-weight: 500;
+        }
+        
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .login-container,
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .google-form-container iframe {
+                height: 500px;
+            }
         }
     </style>
 </head>
@@ -185,6 +215,7 @@
     </script>
 </body>
 </html>
+
 
 
 
